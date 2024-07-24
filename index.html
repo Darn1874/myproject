@@ -22,19 +22,29 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar p-4 fixed w-full top-0 left-0 z-10">
-        <div class="container mx-auto flex flex-wrap justify-around">
-            <button id="btn-user-profiles" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">User Profiles</button>
-            <button id="btn-content-sharing" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Content Sharing</button>
-            <button id="btn-newsfeed" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Newsfeed</button>
-            <button id="btn-interactions" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Interactions</button>
-            <button id="btn-community-groups" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Community Groups</button>
-            <button id="btn-trending-topics" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Trending Topics</button>
-            <button id="btn-direct-messaging" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Direct Messaging</button>
-            <button id="btn-privacy-settings" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Privacy Settings</button>
-            <button id="btn-feedback" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Feedback</button>
-            <button id="btn-support" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Support</button>
-            <button id="btn-search" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Search</button>
-            <button id="btn-monetization" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Monetization</button>
+        <div class="container mx-auto flex items-center justify-between">
+            <h1 class="text-white text-2xl">Niche Community App</h1>
+            <!-- Toggle Button -->
+            <button id="navbar-toggle" class="text-white md:hidden flex items-center p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <!-- Navbar Links -->
+            <div id="navbar-menu" class="hidden md:flex flex-wrap justify-around w-full md:w-auto mt-4 md:mt-0">
+                <button id="btn-user-profiles" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">User Profiles</button>
+                <button id="btn-content-sharing" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Content Sharing</button>
+                <button id="btn-newsfeed" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Newsfeed</button>
+                <button id="btn-interactions" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Interactions</button>
+                <button id="btn-community-groups" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Community Groups</button>
+                <button id="btn-trending-topics" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Trending Topics</button>
+                <button id="btn-direct-messaging" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Direct Messaging</button>
+                <button id="btn-privacy-settings" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Privacy Settings</button>
+                <button id="btn-feedback" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Feedback</button>
+                <button id="btn-support" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Support</button>
+                <button id="btn-search" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Search</button>
+                <button id="btn-monetization" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Monetization</button>
+            </div>
         </div>
     </nav>
 
@@ -75,72 +85,64 @@
     </div>
 
     <script>
-        function adjustButtonLayout() {
-            const width = window.innerWidth;
-            const buttonContainer = document.getElementById('button-container');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle the navbar toggle
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarMenu = document.getElementById('navbar-menu');
 
-            if (width < 600) {
-                buttonContainer.style.gridTemplateColumns = '1fr';
-            } else if (width < 900) {
-                buttonContainer.style.gridTemplateColumns = '1fr 1fr';
-            } else {
-                buttonContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
-            }
-        }
+            navbarToggle.addEventListener('click', () => {
+                navbarMenu.classList.toggle('hidden');
+            });
 
-        function loadProfile() {
-            const profile = JSON.parse(localStorage.getItem('profile'));
-            if (profile) {
-                document.getElementById('profile-username').innerHTML = `Username: <span class="font-semibold">${profile.username}</span>`;
-                document.getElementById('profile-bio').innerHTML = `Bio: <span class="font-semibold">${profile.bio}</span>`;
-                document.getElementById('profile-pic').innerHTML = `Profile Picture: <span class="font-semibold">${profile.profilePic}</span>`;
-                // Optionally set profile picture if it's an image URL
-                // document.getElementById('profile-pic').innerHTML = `<img src="${profile.profilePic}" alt="Profile Picture" class="w-16 h-16 rounded-full">`;
-            }
-        }
+            // Handle navbar button clicks
+            document.querySelectorAll('#navbar-menu button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const buttons = document.querySelectorAll('#navbar-menu button');
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    document.getElementById('display').value = `Clicked ${button.textContent}`;
+                });
+            });
 
-        function handleProfileUpdate(event) {
-            event.preventDefault(); // Prevent form from submitting normally
+            // Load and display profile data on page load
+            const loadProfile = () => {
+                const profile = JSON.parse(localStorage.getItem('profile'));
+                if (profile) {
+                    document.getElementById('profile-username').innerHTML = `Username: <span class="font-semibold">${profile.username}</span>`;
+                    document.getElementById('profile-bio').innerHTML = `Bio: <span class="font-semibold">${profile.bio}</span>`;
+                    document.getElementById('profile-pic').innerHTML = `Profile Picture: <span class="font-semibold">${profile.profilePic}</span>`;
+                    // Optionally set profile picture if it's an image URL
+                    // document.getElementById('profile-pic').innerHTML = `<img src="${profile.profilePic}" alt="Profile Picture" class="w-16 h-16 rounded-full">`;
+                }
+            };
 
-            // Retrieve user inputs
-            const username = document.getElementById('username').value;
-            const bio = document.getElementById('bio').value;
-            const profilePic = document.getElementById('profile-pic-url').value;
+            // Handle form submission
+            const handleProfileUpdate = (event) => {
+                event.preventDefault(); // Prevent form from submitting normally
 
-            // Display updated profile info
-            alert(`Profile Updated:\nUsername: ${username}\nBio: ${bio}\nProfile Picture URL: ${profilePic}`);
-            
-            // Store the profile data
-            const profileData = { username, bio, profilePic };
-            localStorage.setItem('profile', JSON.stringify(profileData));
+                // Retrieve user inputs
+                const username = document.getElementById('username').value;
+                const bio = document.getElementById('bio').value;
+                const profilePic = document.getElementById('profile-pic-url').value;
 
-            // Update the profile display section
+                // Display updated profile info
+                alert(`Profile Updated:\nUsername: ${username}\nBio: ${bio}\nProfile Picture URL: ${profilePic}`);
+                
+                // Store the profile data
+                const profileData = { username, bio, profilePic };
+                localStorage.setItem('profile', JSON.stringify(profileData));
+
+                // Update the profile display section
+                loadProfile();
+
+                // Optionally clear the form fields
+                document.getElementById('profile-form').reset();
+            };
+
+            document.getElementById('profile-form').addEventListener('submit', handleProfileUpdate);
+
+            // Initial load of profile data
             loadProfile();
-
-            // Optionally clear the form fields
-            document.getElementById('profile-form').reset();
-        }
-
-        function handleButtonClick(buttonId) {
-            const buttons = document.querySelectorAll('nav button');
-            buttons.forEach(button => button.classList.remove('active'));
-            document.getElementById(buttonId).classList.add('active');
-            document.getElementById('display').value = `Clicked ${buttonId.replace('btn-', '')}`;
-        }
-
-        // Call adjustButtonLayout on page load and on resize
-        window.addEventListener('load', () => {
-            adjustButtonLayout();
-            loadProfile(); // Load and display profile data on page load
-        });
-        window.addEventListener('resize', adjustButtonLayout);
-
-        // Handle form submission
-        document.getElementById('profile-form').addEventListener('submit', handleProfileUpdate);
-
-        // Handle navbar button clicks
-        document.querySelectorAll('nav button').forEach(button => {
-            button.addEventListener('click', () => handleButtonClick(button.id));
         });
     </script>
 </body>
