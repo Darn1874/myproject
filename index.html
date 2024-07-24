@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niche Community App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #1a202c; /* Tailwind's gray-800 */
+            margin: 0;
+        }
+        .navbar {
+            background-color: #2d3748; /* Tailwind's gray-700 */
+        }
+        .active {
+            background-color: #3182ce; /* Tailwind's blue-500 */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar p-4 fixed w-full top-0 left-0 z-10">
+        <div class="container mx-auto flex flex-wrap justify-around">
+            <button id="btn-user-profiles" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">User Profiles</button>
+            <button id="btn-content-sharing" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Content Sharing</button>
+            <button id="btn-newsfeed" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Newsfeed</button>
+            <button id="btn-interactions" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Interactions</button>
+            <button id="btn-community-groups" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Community Groups</button>
+            <button id="btn-trending-topics" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Trending Topics</button>
+            <button id="btn-direct-messaging" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Direct Messaging</button>
+            <button id="btn-privacy-settings" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Privacy Settings</button>
+            <button id="btn-feedback" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Feedback</button>
+            <button id="btn-support" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Support</button>
+            <button id="btn-search" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Search</button>
+            <button id="btn-monetization" class="text-white p-2 rounded hover:bg-gray-600 mb-2 md:mb-0">Monetization</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-20 flex items-center justify-center h-full">
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 max-w-xs w-full">
+            <h2 class="text-2xl font-bold mb-4 text-white text-center">Niche Community App</h2>
+            <input type="text" class="w-full p-2 border border-gray-600 rounded mb-4 text-center text-white bg-gray-700" placeholder="Enter your interest" id="display" disabled>
+            
+            <!-- Profile Display Section -->
+            <div id="profile-display" class="mb-4">
+                <h3 class="text-xl font-semibold text-white mb-2">Profile</h3>
+                <p id="profile-username" class="text-white">Username: <span class="font-semibold">Not Set</span></p>
+                <p id="profile-bio" class="text-white">Bio: <span class="font-semibold">Not Set</span></p>
+                <p id="profile-pic" class="text-white">Profile Picture: <span class="font-semibold">Not Set</span></p>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-white mb-2">Update Profile</h3>
+                <form id="profile-form" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-white">Username:</label>
+                        <input type="text" id="username" class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white" placeholder="Enter your username">
+                    </div>
+                    <div>
+                        <label for="bio" class="block text-white">Bio:</label>
+                        <textarea id="bio" class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white" rows="3" placeholder="Enter a brief bio"></textarea>
+                    </div>
+                    <div>
+                        <label for="profile-pic-url" class="block text-white">Profile Picture URL:</label>
+                        <input type="text" id="profile-pic-url" class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white" placeholder="Enter URL for profile picture">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function adjustButtonLayout() {
+            const width = window.innerWidth;
+            const buttonContainer = document.getElementById('button-container');
+
+            if (width < 600) {
+                buttonContainer.style.gridTemplateColumns = '1fr';
+            } else if (width < 900) {
+                buttonContainer.style.gridTemplateColumns = '1fr 1fr';
+            } else {
+                buttonContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
+            }
+        }
+
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('profile'));
+            if (profile) {
+                document.getElementById('profile-username').innerHTML = `Username: <span class="font-semibold">${profile.username}</span>`;
+                document.getElementById('profile-bio').innerHTML = `Bio: <span class="font-semibold">${profile.bio}</span>`;
+                document.getElementById('profile-pic').innerHTML = `Profile Picture: <span class="font-semibold">${profile.profilePic}</span>`;
+                // Optionally set profile picture if it's an image URL
+                // document.getElementById('profile-pic').innerHTML = `<img src="${profile.profilePic}" alt="Profile Picture" class="w-16 h-16 rounded-full">`;
+            }
+        }
+
+        function handleProfileUpdate(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+
+            // Retrieve user inputs
+            const username = document.getElementById('username').value;
+            const bio = document.getElementById('bio').value;
+            const profilePic = document.getElementById('profile-pic-url').value;
+
+            // Display updated profile info
+            alert(`Profile Updated:\nUsername: ${username}\nBio: ${bio}\nProfile Picture URL: ${profilePic}`);
+            
+            // Store the profile data
+            const profileData = { username, bio, profilePic };
+            localStorage.setItem('profile', JSON.stringify(profileData));
+
+            // Update the profile display section
+            loadProfile();
+
+            // Optionally clear the form fields
+            document.getElementById('profile-form').reset();
+        }
+
+        function handleButtonClick(buttonId) {
+            const buttons = document.querySelectorAll('nav button');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.getElementById(buttonId).classList.add('active');
+            document.getElementById('display').value = `Clicked ${buttonId.replace('btn-', '')}`;
+        }
+
+        // Call adjustButtonLayout on page load and on resize
+        window.addEventListener('load', () => {
+            adjustButtonLayout();
+            loadProfile(); // Load and display profile data on page load
+        });
+        window.addEventListener('resize', adjustButtonLayout);
+
+        // Handle form submission
+        document.getElementById('profile-form').addEventListener('submit', handleProfileUpdate);
+
+        // Handle navbar button clicks
+        document.querySelectorAll('nav button').forEach(button => {
+            button.addEventListener('click', () => handleButtonClick(button.id));
+        });
+    </script>
+</body>
+</html>
